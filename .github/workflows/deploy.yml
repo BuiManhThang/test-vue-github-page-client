@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Chỉ thực thi khi có push vào nhánh main (thay bằng nhánh bạn đang dùng nếu khác)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Bước 1: Checkout mã nguồn
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Bước 2: Cài đặt Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.18.0  # Sử dụng phiên bản Node.js, tùy chỉnh nếu cần
+
+      # Bước 3: Cài đặt dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Bước 4: Build ứng dụng Vue.js
+      - name: Build project
+        run: npm run build
+
+      # Bước 5: Deploy lên GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
